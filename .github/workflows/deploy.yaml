@@ -40,7 +40,7 @@ jobs:  #what are actions job now ??
 
     
       - name: cdk deploy
-        run: npx cdk deploy  #dont we need cdk?? it is in the node_modules now after npm install so we find it 
+        run: npx cdk deploy --require-approval never #dont we need cdk?? it is in the node_modules now after npm install so we find it 
 
       #now we have cloudformation template next we need permission to aws to deploy these 
 
