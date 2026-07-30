@@ -53,7 +53,7 @@ export class WebProjectContainerizedStack extends cdk.Stack {
       originAccessControl: oac
     })
 
-    const cloudfront_certificate =  acm.Certificate.fromCertificateArn(this, 'Webcertificate',"arn:aws:acm:us-east-1:882885365745:certificate/669cb31c-deae-43c0-a2c8-b298a2626e9e");
+    const cloudfront_certificate =  acm.Certificate.fromCertificateArn(this, 'Webcertificate',"arn:aws:acm:us-east-1:882885365745:certificate/66f1b971-43d8-4097-948d-036ec82b5388");
 
     const alb_certificate =  acm.Certificate.fromCertificateArn(this, 'ALBcertificate',"arn:aws:acm:us-east-1:882885365745:certificate/1fcdffb1-e493-4bd7-8fa1-a8c608efe0c9");
 
