@@ -295,7 +295,7 @@ const db_product_inventory = new dynamo.Table(this, "RicemillproductinventoryTab
     this,
     "BackendRepository",
     "backend"
-  );
+  );        //here since we did not specify the tag container will always pull the image with tag latest so backend:latest
   
     const containerDefinition = taskdefinition.addContainer("ContainerDefinition", {
       image: ecs.ContainerImage.fromEcrRepository(repository),
@@ -341,7 +341,7 @@ const db_product_inventory = new dynamo.Table(this, "RicemillproductinventoryTab
       vpcSubnets: {
         subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS
       },
-      desiredCount: 2,
+      desiredCount: 1,
       serviceName: "Ricemill_ECS_service",
       securityGroups: [securitygrouptask], //this is the security group that will be attached to all the tasks that will be launched now it should have inbound for alb 
     });
