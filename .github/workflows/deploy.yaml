@@ -19,14 +19,14 @@ jobs:  #what are actions job now ??
       - uses: actions/checkout@v4 #run a pre built GHithub action and download the repo on the ubuntu   server initially it is only on github repo, now we can install packages and stuff 
         name: checkout repository version v2 owner actions 
 
-      #   #now for using npm install we need node.js so we download it 
-      # - name: Install node.js #this is essentialy describing what uses does 
-      #   uses: actions/setup-node@v4
-      #   with: 
-      #     node-version: 22
+        #now for using npm install we need node.js so we download it 
+      - name: Install node.js #this is essentialy describing what uses does 
+        uses: actions/setup-node@v4
+        with: 
+          node-version: 22
                
-      # - name: install dependencies listed in package.json
-      #   run: npm install
+      - name: install dependencies listed in package.json
+        run: npm install
 
       - uses: aws-actions/configure-aws-credentials@v4
         with:
