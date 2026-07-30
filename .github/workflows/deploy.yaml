@@ -30,7 +30,7 @@ jobs:  #what are actions job now ??
 
       - uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: arn:aws:iam::882885365745:role/IAM_GITHUB_CONTAINRIZED_BACKEND
+          role-to-assume: arn:aws:iam::882885365745:role/IAM_GITHUB_CONTAINRIZED_INFRA
           role-session-name: GitHub-Action-Role
           aws-region: us-east-1
 
