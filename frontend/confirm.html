@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+    <title>Confirm Account</title>
+
+    <link rel="stylesheet" href="Styles/style.css">
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Confirm Account</h1>
+
+    <input
+        id="username"
+        placeholder="Username"
+    />
+
+    <input
+        id="code"
+        placeholder="Verification Code"
+    />
+
+    <button onclick="confirmAccount()">
+        Confirm Account
+    </button>
+
+    <p id="message"></p>
+
+    <p>
+        Already confirmed?
+        <a href="login.html">Login</a>
+    </p>
+
+</div>
+<script src="config.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/amazon-cognito-identity-js@6.3.12/dist/amazon-cognito-identity.min.js"></script>
+
+<script src="Scripts/confirm.js"></script>
+
+</body>
+
+</html>

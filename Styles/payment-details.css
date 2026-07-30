@@ -1,0 +1,62 @@
+.main-box{
+  display:flex;
+  justify-content: flex-start;
+  flex-direction: column;
+  margin-top:100px;
+  margin-left:450px;
+  gap:30px;
+  width:600px;
+  height:600px;
+  border: 2px solid whitesmoke; /* width: 2px, style: solid, color: green */
+  
+}
+
+.payment-details-header{
+
+  border-radius: 5px;
+  height:10px;
+  padding:20px;
+  background-color: grey;
+  font-size:23px;
+
+}
+
+.card-details{
+  display:flex;
+  justify-content: flex-start;
+  flex-direction: column;
+  gap:30px;
+  padding:20px;
+  margin-top:-40px;
+  border-bottom: 2px solid lightgrey;
+  height: 350px;
+
+}
+.input{
+  width:550px;
+}
+.input-expiry,.input-cvv{
+  width:260px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+
+}
+.card-name , .card-number, .expiry, .cvv{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;}
+
+.expiry-cv{
+  display: flex;
+  flex-direction: row;
+  gap:30px;
+}
+
+.button{
+  margin-top : 60px;
+  height:50px;
+  font-size:25px;
+  cursor:pointer;
+  background-color: #2F80ED ; 
+}

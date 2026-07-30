@@ -1,0 +1,219 @@
+body {
+
+  margin:0;
+
+  font-family: Arial, Helvetica, sans-serif;
+
+  background:#f4f6f8;
+
+}
+
+
+
+.container {
+
+
+  width:400px;
+
+  margin:80px auto;
+
+  background:white;
+
+  padding:30px;
+
+  border-radius:10px;
+
+  box-shadow:0 0 10px rgba(0,0,0,0.15);
+
+  text-align:center;
+
+}
+
+
+
+h1 {
+
+  color:#333;
+
+}
+
+
+
+h2 {
+
+  color:#555;
+
+}
+
+
+
+
+input {
+
+
+  width:90%;
+
+  padding:12px;
+
+  margin:10px 0;
+
+  border:1px solid #ccc;
+
+  border-radius:5px;
+
+  font-size:16px;
+
+}
+
+
+
+
+
+button {
+
+
+  padding:12px 20px;
+
+  border:none;
+
+  border-radius:5px;
+
+  background:#007bff;
+
+  color:white;
+
+  cursor:pointer;
+
+  font-size:15px;
+
+
+}
+
+
+
+button:hover {
+
+
+  background:#0056b3;
+
+
+}
+
+
+
+
+
+#message {
+
+
+  color:red;
+
+}
+
+
+
+
+.add-task {
+
+
+  display:flex;
+
+  gap:5px;
+
+}
+
+
+
+
+.add-task input {
+
+
+  flex:1;
+
+}
+
+
+
+
+ul {
+
+
+  list-style:none;
+
+  padding:0;
+
+}
+
+
+
+
+
+.task {
+
+
+  display:flex;
+
+  justify-content:space-between;
+
+  align-items:center;
+
+
+  background:#eee;
+
+
+  padding:12px;
+
+
+  margin:10px 0;
+
+
+  border-radius:5px;
+
+
+}
+
+
+
+.task.completed {
+
+
+  text-decoration:line-through;
+
+  opacity:0.6;
+
+}
+
+
+
+
+
+.task button {
+
+
+  background:red;
+
+  padding:8px 12px;
+
+}
+
+
+
+
+
+.logout {
+
+
+  background:#555;
+
+  margin-top:20px;
+
+}
+
+
+.logout:hover {
+
+
+  background:#333;
+
+
+}

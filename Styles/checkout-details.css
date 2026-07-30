@@ -1,0 +1,84 @@
+.top-bar{
+  border-bottom: 2px solid #ccc;
+}
+
+
+.logo-image{
+  width:200px;
+  margin-top:10px;
+  margin-left:100px;
+}
+
+.main-body{
+ margin-left:500px;
+ display: flex;
+ flex-direction: column;
+ justify-content: flex-start;
+
+}
+
+
+.Personal-information{
+
+  height: 500px;
+  display: flex;
+  flex-direction: column;
+  margin-top:20px;
+  justify-content: flex-start;
+  gap:10px;
+
+}
+
+.personal-information-heading{
+   color:green;
+   font-size: 40px ;
+}
+
+.confirm-email, .name , .address , .email , .phone-number ,.zip-code,.city,.state , .apt-suite{
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.input,.input-apt-suite{
+  width:600px;
+  height:30px;
+  border-radius: 5px;
+}
+.input-new{
+  width:295px;
+  height:30px;
+  border-radius: 5px;
+}
+.required::after{
+  content: " *";
+  color: red;
+  font-weight: bold;
+}
+
+.zip-city{
+  width  :600px;
+  display: flex;
+  gap:10px;
+
+}
+.optional{
+  color: #9ca3af;
+}
+.Submit-order{
+  margin-left:500px;
+  margin-top:20px;
+  width:620px;
+  height:40px;
+  border-radius:20px;
+  cursor:pointer;
+  font-size: 18px;
+  color:white;
+  background-color: black;
+  
+}
+.state{
+  margin-top:-15px;
+}
+.Submit-order:hover{
+  color:orange;
+}

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<title>
+Register
+</title>
+
+<link rel="stylesheet" href="Styles/style.css">
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>
+Create Account
+</h1>
+
+<input
+id="username"
+placeholder="Username"
+/>
+
+<input
+id="email"
+type="email"
+placeholder="Email"
+/>
+
+<input
+id="password"
+type="password"
+placeholder="Password"
+/>
+
+<p>
+Password must be at least 6 characters long and contain at least one uppercase letter, one lowercase letter, and one number.
+</p>
+
+<button onclick="register()">
+Register
+</button>
+
+<p id="message"></p>
+
+<p>
+Already have an account?
+<a href="login.html">Login</a>
+</p>
+
+</div>
+<script src="config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/amazon-cognito-identity-js@6.3.12/dist/amazon-cognito-identity.min.js"></script>
+
+<script src="Scripts/registration.js"></script>
+
+</body>
+
+</html>

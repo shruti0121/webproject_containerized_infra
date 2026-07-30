@@ -1,0 +1,53 @@
+name : deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:  #what are actions job now ??
+  cdk-deployment: #name of the job is upto us we can choose the name that this action will perform 
+    name: deploy cdk #human readable name will be shown in github action ui 
+    runs-on: ubuntu-latest
+
+    permissions : 
+      id-token: write  #Allow this GitHub Actions workflow to create an OIDC identity token 
+      contents: read  #Allow the workflow to read the repository contents.
+    #now job is made up of steps and steps run in order if step 2 fails step 3 does not run 
+
+    steps: 
+      - uses: actions/checkout@v4 #run a pre built GHithub action and download the repo on the ubuntu   server initially it is only on github repo, now we can install packages and stuff 
+        name: checkout repository version v2 owner actions 
+
+      #   #now for using npm install we need node.js so we download it 
+      # - name: Install node.js #this is essentialy describing what uses does 
+      #   uses: actions/setup-node@v4
+      #   with: 
+      #     node-version: 22
+               
+      # - name: install dependencies listed in package.json
+      #   run: npm install
+
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::882885365745:role/IAM_GITHUB_CONTAINRIZED_BACKEND
+          role-session-name: GitHub-Action-Role
+          aws-region: us-east-1
+
+
+      - name: cdk synth 
+        run: npx cdk synth  #dont we need cdk?? it is in the node_modules now after npm install so we find it 
+
+    
+      - name: cdk deploy
+        run: npx cdk deploy  #dont we need cdk?? it is in the node_modules now after npm install so we find it 
+
+      #now we have cloudformation template next we need permission to aws to deploy these 
+
+
+
+
+
+
+
+

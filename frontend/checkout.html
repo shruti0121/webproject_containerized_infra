@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>checkout</title>
+    <link rel="stylesheet" href="Styles/checkout.css">
+    <link
+          rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css"
+        />
+</head>
+<body>
+    <!-- <div class="checkout-heading"> 
+      <a href="home-page.html"> 
+        <img src = "images/amazon-logo.png" alt="amazon logo" class ="logo-image"> </a>
+        
+        <div class="checkout-header"> Checkout <span class = "checkout-header-product-count">  </span></div>
+  </div> -->
+
+  <nav class="links">
+
+    <div class="nav-left">
+  
+      <div class="menu-container">
+  
+        <button class="menu-button" id="menuButton">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+  
+        <div class="menu-dropdown" id="menuDropdown">
+          <a href="home-page.html">Home</a>
+          <a href="orders2.html">Orders</a>
+          <a href="profile.html">Profile</a>
+          <a href="login.html">Logout</a>
+        </div>
+  
+      </div>
+  
+      <div class="web-name">
+        <p>Kanta Devi Rice Mill</p>
+      </div>
+  
+    </div>
+  
+    <div class="nav-cart">
+      <a class="cart-link" href="checkout.html">
+        <img src="images/icons/cart-icon.png"
+             class="cart-icon">
+  
+        <span class="cart-count js-cart-count"></span>
+  
+       
+      </a>
+    </div>
+  
+  </nav>
+
+    
+    <div class="order-review"> 
+        <h1 class="review"> Review Your Order</h1>
+       <div class="main">
+          <div class = " cartItems js-html-goes-under"> 
+         
+          
+          </div>
+         
+         
+          <div class="order-summary">
+           
+          </div>   
+        </div>  <!--main end here -->
+    </div>
+    <script src="config.js"></script>
+    <script type = "module" src = "Scripts/checkout.js">  </script>
+    <script type="module" src="checkout/order-summary.js"></script>
+    <script type="module" src="checkout/payment-summary.js"></script>
+
+</body>
+</html>
