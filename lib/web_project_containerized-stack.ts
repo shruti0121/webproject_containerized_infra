@@ -62,7 +62,7 @@ export class WebProjectContainerizedStack extends cdk.Stack {
         origin: s3Origin,
         cachePolicy : cloudfront.CachePolicy.CACHING_DISABLED,
       },
-      domainNames : ["ricemill.shruti-singla.com"],
+      domainNames : ["test.ricemill.shruti-singla.com"],
       certificate: cloudfront_certificate,
       defaultRootObject : "index.html",
 
@@ -70,7 +70,7 @@ export class WebProjectContainerizedStack extends cdk.Stack {
 
    new route53.ARecord(this,'Aliasrecord',{
       zone: route53_hostedZone ,
-      recordName : "ricemill.shruti-singla.com",
+      recordName : "test.ricemill.shruti-singla.com",
       target: route53.RecordTarget.fromAlias(
         new targets.CloudFrontTarget(distribution),
     )       
