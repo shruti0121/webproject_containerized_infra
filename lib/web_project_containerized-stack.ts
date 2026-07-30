@@ -14,6 +14,13 @@ import * as iam from 'aws-cdk-lib/aws-iam';
 import * as ecr from 'aws-cdk-lib/aws-ecr';
 import * as s3deploy from "aws-cdk-lib/aws-s3-deployment";
 import * as dynamo from "aws-cdk-lib/aws-dynamodb";
+import * as sns from "aws-cdk-lib/aws-sns";
+import * as sqs from "aws-cdk-lib/aws-sqs";
+import * as lambda from "aws-cdk-lib/aws-lambda";
+import * as lambdatriggers from 'aws-cdk-lib/aws-lambda-event-sources'
+import * as sns_sub from 'aws-cdk-lib/aws-sns-subscriptions';
+import * as ses from 'aws-cdk-lib/aws-ses';
+import { aws_codeconnections as codeconnections } from 'aws-cdk-lib'
 
 
 export class WebProjectContainerizedStack extends cdk.Stack {
@@ -197,7 +204,9 @@ export class WebProjectContainerizedStack extends cdk.Stack {
   const taskRole = new iam.Role(this,'TaskRolecontainer',{
     assumedBy: new iam.ServicePrincipal("ecs-tasks.amazonaws.com"),
     managedPolicies: [
-      iam.ManagedPolicy.fromAwsManagedPolicyName("AmazonDynamoDBFullAccess")
+      iam.ManagedPolicy.fromAwsManagedPolicyName("AmazonDynamoDBFullAccess"),
+      iam.ManagedPolicy.fromAwsManagedPolicyName("AmazonSNSFullAccess"),
+
     ]
   });
 
@@ -289,6 +298,15 @@ const db_product_inventory = new dynamo.Table(this, "RicemillproductinventoryTab
   billingMode: dynamo.BillingMode.PAY_PER_REQUEST
 });
 
+
+
+
+/* --------------------- SNSTopic --------------------------------- */
+const sns_putorder = new sns.Topic(this,"SNS",{
+  displayName : "ricemill_snstopic",
+  topicName   : "ricemill_snstopic_orderplaced",
+  fifo        : false
+ });
    //----------------------------------------------------------------------------//
 
    const repository = ecr.Repository.fromRepositoryName(
@@ -306,6 +324,7 @@ const db_product_inventory = new dynamo.Table(this, "RicemillproductinventoryTab
         ORDER_TABLE:db_putorders.tableName,
         ANALYTICS_TABLE:db_analytics.tableName,
         INVENTORY_TABLE:db_product_inventory.tableName,
+        SNS_TOPIC_ARN: sns_putorder.topicArn
         
      },
       memoryLimitMiB: 512,
@@ -371,6 +390,191 @@ const db_product_inventory = new dynamo.Table(this, "RicemillproductinventoryTab
     new targets.LoadBalancerTarget(loadbalancer),
   )       
 });
+
+
+
+
+/* --------------------- SQS's dead letter queeus--------------------------------- */
+
+const sqs_email_dlq = new sqs.Queue(this,"SQS-email-dlq",{
+  queueName : "SQS-email-dlq",
+  // redriveAllowPolicy: {
+  //   redrivePermission : sqs.RedrivePermission.BY_QUEUE,
+  // }
+ });
+
+ const sqs_inventory_dlq = new sqs.Queue(this,"SQS-inventory-dlq",{
+  queueName : "SQS-inventory-dlq",
+  // redriveAllowPolicy: {
+  //   redrivePermission : sqs.RedrivePermission.BY_QUEUE
+  // }
+ });
+
+
+ const sqs_analytics_dlq = new sqs.Queue(this,"SQS-analytics-dlq",{
+  queueName : "SQS-analytics-dlq",
+  // redriveAllowPolicy: {
+  //   redrivePermission : sqs.RedrivePermission.BY_QUEUE
+  // }
+ });
+
+
+/* --------------------- SQS's --------------------------------- */
+
+ const sqs_email = new sqs.Queue(this,"SQS-email",{ //by defualt standard queue 
+  queueName : "SQS-email",
+  deadLetterQueue : {
+    queue :sqs_email_dlq,
+    maxReceiveCount: 2
+  }
+ });
+
+ const sqs_inventory = new sqs.Queue(this,"SQS-inventory",{ //by defualt standard queue 
+  queueName : "SQS-inventory",
+  deadLetterQueue : {
+    queue :sqs_inventory_dlq,
+    maxReceiveCount: 2
+  }
+ });
+
+ const sqs_analytics = new sqs.Queue(this,"SQS-analytics",{ //by defualt standard queue 
+  queueName : "SQS-analytics",
+  deadLetterQueue : {
+    queue :sqs_analytics_dlq,
+    maxReceiveCount: 2
+  }
+ });
+
+/* --------------------- SQS's resource policy to let messages in from SNS ------------------------ */
+
+const sqs_policy = new sqs.QueuePolicy(this , "SQS-policy",{
+  queues: [sqs_email_dlq,sqs_inventory_dlq,sqs_analytics_dlq],
+
+})
+
+sqs_policy.document.addStatements(
+  new iam.PolicyStatement({
+    effect: iam.Effect.ALLOW,
+    principals: [
+      new iam.ServicePrincipal("sns.amazonaws.com")
+    ],
+    actions: [
+      "sqs:SendMessage"
+    ],
+    resources: [
+         "*"
+
+    ],
+    conditions: {
+      ArnEquals: {
+        "aws:SourceArn": sns_putorder.topicArn
+      }
+    }
+  })
+);
+
+ /* --------------------- Subscription between SQS's and SNS --------------------------------- */
+ sns_putorder.addSubscription(
+  new sns_sub.SqsSubscription(sqs_email)
+);
+
+sns_putorder.addSubscription(
+  new sns_sub.SqsSubscription(sqs_inventory)
+);
+sns_putorder.addSubscription(
+  new sns_sub.SqsSubscription(sqs_analytics)
+);
+
+/* --------------------- SES identities for SQS-email --------------------------------- */
+
+  const ses_identity_from  = new ses.EmailIdentity(this, "ses-Emailidentity-from",{
+    identity: ses.Identity.email("shrutisingla268@gmail.com"),
+  })
+  const ses_identity_to  = new ses.EmailIdentity(this, "ses-Emailidentity-to",{
+    identity: ses.Identity.email("ruhichawla268@gmail.com"),
+  })
+
+
+
+  /*   ----- IAM Role for lambdas pooling sqs (analytics and inventory)-------------------- */
+
+  const iamrole_sqs_lambdas = new iam.Role(this, "sqslambdaiam",{
+    assumedBy: new iam.ServicePrincipal("lambda.amazonaws.com"),
+    managedPolicies: [
+      iam.ManagedPolicy.fromAwsManagedPolicyName(
+        "service-role/AWSLambdaBasicExecutionRole",
+      ), //cloudwatch logs 
+      iam.ManagedPolicy.fromAwsManagedPolicyName("AmazonDynamoDBFullAccess"),
+      iam.ManagedPolicy.fromAwsManagedPolicyName(
+        "service-role/AWSLambdaSQSQueueExecutionRole"
+      )
+
+    ]
+   });
+
+/*   ----------- IAM Role for lambdas pooling sqs (analytics and inventory) --------------- */
+
+const iamrole_sqs_lambda_email = new iam.Role(this, "sqslambdaiam_email",{
+assumedBy: new iam.ServicePrincipal("lambda.amazonaws.com"),
+managedPolicies: [
+  iam.ManagedPolicy.fromAwsManagedPolicyName(
+    "service-role/AWSLambdaBasicExecutionRole",
+  ), //cloudwatch logs 
+  iam.ManagedPolicy.fromAwsManagedPolicyName("AmazonSESFullAccess"),
+  iam.ManagedPolicy.fromAwsManagedPolicyName(
+    "service-role/AWSLambdaSQSQueueExecutionRole"
+  )
+
+]
+});
+
+
+/* --------------------- Lambdas for SQS --------------------------------- */
+
+const sqs_email_lambda = new lambda.Function(this, "sqsemaillambda",
+  {
+    runtime: lambda.Runtime.NODEJS_24_X,
+    handler:"sqsemail.handler",
+    code : lambda.Code.fromAsset("lambda"),
+    role : iamrole_sqs_lambda_email,  //now this only need access to ses and sqs
+    
+}); 
+
+
+const sqs_analytics_lambda = new lambda.Function(this, "sqs_analytics_lambda",
+  {
+    runtime: lambda.Runtime.NODEJS_24_X,
+    handler:"sqsanalytics.handler",
+    code : lambda.Code.fromAsset("lambda"),
+    role : iamrole_sqs_lambdas,  //now this only need access to db and sqs
+});
+
+
+
+const sqs_inventory_lambda = new lambda.Function(this, "sqs_inventory_lambda",
+  {
+    runtime: lambda.Runtime.NODEJS_24_X,
+    handler:"sqsinventory.handler",
+    code : lambda.Code.fromAsset("lambda"),
+    role : iamrole_sqs_lambdas,   //now this only need access to db and sqs 
+    
+
+});
+
+
+/* --------------------- SQS Lambda triggers --------------------------------- */
+sqs_email_lambda.addEventSource(
+  new lambdatriggers.SqsEventSource(sqs_email)
+);
+
+
+sqs_inventory_lambda.addEventSource(
+  new lambdatriggers.SqsEventSource(sqs_inventory)
+);
+
+sqs_analytics_lambda.addEventSource(
+  new lambdatriggers.SqsEventSource(sqs_analytics)
+);
 
 
 
