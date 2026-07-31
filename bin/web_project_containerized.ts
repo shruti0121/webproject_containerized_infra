@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import * as cdk from 'aws-cdk-lib/core';
-import { WebProjectContainerizedStack } from '../lib/web_project_containerized-stack';
+import { WebProjectContainerizedStack } from 'lib/web_project_containerized-stack';
 
 const app = new cdk.App();
 new WebProjectContainerizedStack(app, 'WebProjectContainerizedStack', {
