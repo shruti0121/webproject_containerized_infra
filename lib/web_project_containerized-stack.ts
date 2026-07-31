@@ -487,12 +487,12 @@ sns_putorder.addSubscription(
 
 /* --------------------- SES identities for SQS-email --------------------------------- */
 
-  const ses_identity_from  = new ses.EmailIdentity(this, "ses-Emailidentity-from",{
-    identity: ses.Identity.email("shrutisingla268@gmail.com"),
-  })
-  const ses_identity_to  = new ses.EmailIdentity(this, "ses-Emailidentity-to",{
-    identity: ses.Identity.email("ruhichawla268@gmail.com"),
-  })
+  // const ses_identity_from  = new ses.EmailIdentity(this, "ses-Emailidentity-from",{
+  //   identity: ses.Identity.email("shrutisingla268@gmail.com"),
+  // })
+  // const ses_identity_to  = new ses.EmailIdentity(this, "ses-Emailidentity-to",{
+  //   identity: ses.Identity.email("ruhichawla268@gmail.com"),
+  // })
 
 
 
