@@ -62,7 +62,7 @@ export class BackendStack extends cdk.Stack {
       logging: ecs.LogDrivers.awsLogs({ streamPrefix: 'ricemill-api' }),
     });
     containerDefinition.addPortMappings({ containerPort: 3000 });
-
+    
     const taskSg = new ec2.SecurityGroup(this, 'tasksecuritygroupecs', {
       securityGroupName: 'ricemill_ecs_task_sg', vpc: props.vpc,
       description: 'Security group for the task',
