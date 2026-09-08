@@ -208,81 +208,87 @@ export class WebProjectContainerizedStack extends cdk.Stack {
 
    //----------------------------------------------------------------------------//
 
-   const db_user = new dynamo.Table(this, "RicemillUserTable", {
-    tableName: "Ricemill_user_cdk",
+  //  const db_user = new dynamo.Table(this, "RicemillUserTable", {
+  //   tableName: "Ricemill_user_cdk",
   
-    partitionKey: {
-      name: "user_id",
-      type: dynamo.AttributeType.STRING
-    },
+  //   partitionKey: {
+  //     name: "user_id",
+  //     type: dynamo.AttributeType.STRING
+  //   },
   
-    billingMode: dynamo.BillingMode.PAY_PER_REQUEST
-  });
+  //   billingMode: dynamo.BillingMode.PAY_PER_REQUEST
+  // });
 
-const db_products = new dynamo.Table(this, "RicemilproductsTable", {
-  tableName: "Ricemill_products_cdk",
+// const db_products = new dynamo.Table(this, "RicemilproductsTable", {
+//   tableName: "Ricemill_products_cdk",
 
-  partitionKey: {
-    name: "prod_id",
-    type: dynamo.AttributeType.STRING
-  },
+//   partitionKey: {
+//     name: "prod_id",
+//     type: dynamo.AttributeType.STRING
+//   },
 
-  billingMode: dynamo.BillingMode.PAY_PER_REQUEST
-});
-
-
-
-const db_getcartcount = new dynamo.Table(this, "RicemillcartcountTable", {
-  tableName: "Ricemill_carts_cdk",
-
-  partitionKey: {
-    name: "user_id",
-    type: dynamo.AttributeType.STRING
-  },
-  sortKey: {
-    name: "product_id",
-    type: dynamo.AttributeType.STRING,
-  },
-
-  billingMode: dynamo.BillingMode.PAY_PER_REQUEST
-});
-
-const db_putorders = new dynamo.Table(this, "RicemillputordersTable", {
-  tableName: "Ricemill_orders_cdk",
-
-  partitionKey: {
-    name: "user_id",
-    type: dynamo.AttributeType.STRING
-  },
-  sortKey: {
-    name: "order_id",
-    type: dynamo.AttributeType.STRING,
-  },
-
-  billingMode: dynamo.BillingMode.PAY_PER_REQUEST
-});
-
-const db_analytics = new dynamo.Table(this, "RicemillanalyticsTable", {
-  tableName: "Ricemill_analytics_v3_cdk",
-
-  partitionKey: {
-    name: "metric_name",
-    type: dynamo.AttributeType.STRING
-  },
-  billingMode: dynamo.BillingMode.PAY_PER_REQUEST
-});
+//   billingMode: dynamo.BillingMode.PAY_PER_REQUEST
+// });
 
 
-const db_product_inventory = new dynamo.Table(this, "RicemillproductinventoryTable", {
-  tableName: "Ricemill_product_inventory_cdk",
 
-  partitionKey: {
-    name: "product_id",
-    type: dynamo.AttributeType.STRING
-  }, 
-  billingMode: dynamo.BillingMode.PAY_PER_REQUEST
-});
+// const db_getcartcount = new dynamo.Table(this, "RicemillcartcountTable", {
+//   tableName: "Ricemill_carts_cdk",
 
+//   partitionKey: {
+//     name: "user_id",
+//     type: dynamo.AttributeType.STRING
+//   },
+//   sortKey: {
+//     name: "product_id",
+//     type: dynamo.AttributeType.STRING,
+//   },
+
+//   billingMode: dynamo.BillingMode.PAY_PER_REQUEST
+// });
+
+// const db_putorders = new dynamo.Table(this, "RicemillputordersTable", {
+//   tableName: "Ricemill_orders_cdk",
+
+//   partitionKey: {
+//     name: "user_id",
+//     type: dynamo.AttributeType.STRING
+//   },
+//   sortKey: {
+//     name: "order_id",
+//     type: dynamo.AttributeType.STRING,
+//   },
+
+//   billingMode: dynamo.BillingMode.PAY_PER_REQUEST
+// });
+
+// const db_analytics = new dynamo.Table(this, "RicemillanalyticsTable", {
+//   tableName: "Ricemill_analytics_v3_cdk",
+
+//   partitionKey: {
+//     name: "metric_name",
+//     type: dynamo.AttributeType.STRING
+//   },
+//   billingMode: dynamo.BillingMode.PAY_PER_REQUEST
+// });
+
+
+// const db_product_inventory = new dynamo.Table(this, "RicemillproductinventoryTable", {
+//   tableName: "Ricemill_product_inventory_cdk",
+
+//   partitionKey: {
+//     name: "product_id",
+//     type: dynamo.AttributeType.STRING
+//   }, 
+//   billingMode: dynamo.BillingMode.PAY_PER_REQUEST
+// });
+
+const db_user = dynamo.Table.fromTableName(this, "RicemillUserTable", "Ricemill_user_cdk");
+const db_products = dynamo.Table.fromTableName(this, "RicemilproductsTable", "Ricemill_products_cdk");
+const db_getcartcount = dynamo.Table.fromTableName(this, "RicemillcartcountTable", "Ricemill_carts_cdk");
+const db_putorders = dynamo.Table.fromTableName(this, "RicemillputordersTable", "Ricemill_orders_cdk");
+const db_analytics = dynamo.Table.fromTableName(this, "RicemillanalyticsTable", "Ricemill_analytics_v3_cdk");
+const db_product_inventory = dynamo.Table.fromTableName(this, "RicemillproductinventoryTable", "Ricemill_product_inventory_cdk");
 
 
 
