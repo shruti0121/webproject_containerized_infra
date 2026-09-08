@@ -44,6 +44,10 @@ jobs:
     
       - name: cdk deploy
         run: npx cdk deploy --require-approval never 
+        env:
+          DOMAIN_NAME: ${{ secrets.DOMAIN_NAME }}
+          CLOUDFRONT_CERT_ARN: ${{ secrets.CLOUDFRONT_CERT_ARN }}
+          ALB_CERT_ARN: ${{ secrets.ALB_CERT_ARN }}
 
      
 
