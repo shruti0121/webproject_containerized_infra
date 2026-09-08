@@ -8,6 +8,7 @@ import * as acm from 'aws-cdk-lib/aws-certificatemanager';
 import * as cognito from 'aws-cdk-lib/aws-cognito';
 import * as route53 from 'aws-cdk-lib/aws-route53';
 import * as targets from 'aws-cdk-lib/aws-route53-targets';
+import * as ssm from 'aws-cdk-lib/aws-ssm';
 
 export interface FrontendStackProps extends cdk.StackProps {
   domainName: string;
@@ -29,10 +30,6 @@ export class FrontendStack extends cdk.Stack {
       bucketName: 'ricemill-containerized',
     });
 
-    new s3deploy.BucketDeployment(this, 'DeployWebsite', {
-      destinationBucket: bucket,
-      sources: [s3deploy.Source.asset('frontend')],
-    });
 
     const oac = new cloudfront.S3OriginAccessControl(this, 's3originaccess', {
       signing: cloudfront.Signing.SIGV4_NO_OVERRIDE,
@@ -86,6 +83,36 @@ export class FrontendStack extends cdk.Stack {
 
     this.userPoolClient = this.userPool.addClient('RiceMillClient', {
       userPoolClientName: 'Ricemill_containerized',
+    });
+
+    new s3deploy.BucketDeployment(this, 'DeployWebsite', {
+      destinationBucket: bucket,
+      sources: [
+        s3deploy.Source.asset('frontend'),
+        s3deploy.Source.data(
+          'config.js',   
+          `window.APP_CONFIG = ${JSON.stringify({
+            region: this.region,
+            cognito: {
+              userPoolId: this.userPool.userPoolId,
+              clientId: this.userPoolClient.userPoolClientId,
+            },
+            api: {
+              baseUrl: `https://api.${props.domainName}`,
+            },
+          }, null, 2)};`  
+        ),
+      ],
+    });
+
+    new ssm.StringParameter(this, 'UserPoolIdParam', {
+      parameterName: '/ricemill/cognito/user-pool-id',
+      stringValue: this.userPool.userPoolId,
+    });
+    
+    new ssm.StringParameter(this, 'UserPoolClientIdParam', {
+      parameterName: '/ricemill/cognito/client-id',
+      stringValue: this.userPoolClient.userPoolClientId,
     });
   }
 }
