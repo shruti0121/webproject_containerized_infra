@@ -8,8 +8,8 @@ SNS/SQS/Lambda pipeline for async order processing (email, inventory, analytics)
 
 ![Architecture Diagram](containerized_webproject.png)
 
-Route 53 splits traffic: the apex/frontend subdomain resolves to CloudFront (serving 
-the SPA from S3), and `api.<domain>` resolves to an ALB, which forwards to an ECS 
+Route 53 splits traffic: frontend subdomain resolves to CloudFront (serving 
+the Single page application from S3), and `api.<domain>` resolves to an ALB, which forwards to an ECS 
 Fargate service in a private subnet. The backend publishes order events to SNS, 
 which fans out to three SQS queues (each with its own DLQ), consumed by dedicated 
 Lambdas.
@@ -55,8 +55,7 @@ keys stored in the repo.
 
 ## Known limitations / next steps
 
-- SES email sending is scaffolded but not wired up (see commented code in 
-  `messaging-stack.ts`) — pending domain verification
+- Amazon SES: Used by the email-processing Lambda to send notification emails. SES domain/identity configuration was completed manually through the AWS Console and is not currently provisioned by CDK.
 - No automated tests yet beyond CDK synth — plan to add `assertions`-based 
   snapshot tests
 - IAM roles use scoped grants (`grantReadWriteData`, `grantPublish`) rather than 
