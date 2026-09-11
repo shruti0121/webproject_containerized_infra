@@ -58,10 +58,23 @@ keys stored in the repo.
 - Amazon SES: Used by the email-processing Lambda to send notification emails. SES domain/identity configuration was completed manually through the AWS Console and is not currently provisioned by CDK.
 - No automated tests yet beyond CDK synth — plan to add `assertions`-based 
   snapshot tests
-- IAM roles use scoped grants (`grantReadWriteData`, `grantPublish`) rather than 
-  managed `*FullAccess` policies — see commit history for the least-privilege 
-  migration
 - Single ECS task (`desiredCount: 1`) — no auto-scaling configured yet
+
+## Cost considerations
+
+- Fargate + ALB are the main fixed costs (~$X/month idle) — no auto-scaling means cost is flat regardless of traffic
+- DynamoDB PAY_PER_REQUEST and Lambda are usage-based — near-zero at low traffic
+- CloudFront + S3 frontend hosting is negligible for this scale
+
+## Security
+
+- No hardcoded credentials or account IDs — parameterized via `.env` (local) / GitHub Actions secrets (CI)
+- OIDC-based GitHub Actions deploy role — no long-lived AWS access keys stored anywhere
+- S3 bucket has no public access; only CloudFront can read it via Origin Access Control
+- IAM roles scoped to least-privilege grants (`grantReadWriteData`, `grantPublish`) rather than `*FullAccess` managed policies
+- ALB listener only accepts port 443 with an ACM certificate; no unencrypted HTTP path exists
+- Password policy and email verification enforced by the managed service rather than custom code
+
 
 ## Troubleshooting
 
@@ -87,3 +100,7 @@ keys stored in the repo.
 - In CI: check the GitHub Actions repo secrets (`DOMAIN_NAME`, 
   `CLOUDFRONT_CERT_ARN`, `ALB_CERT_ARN`) are set and referenced in the 
   workflow's `env:` block
+
+  IAM roles use scoped grants (`grantReadWriteData`, `grantPublish`) rather than 
+  managed `*FullAccess` policies — see commit history for the least-privilege 
+  migration
