@@ -61,16 +61,22 @@ export class MessagingStack extends cdk.Stack {
       assumedBy: new iam.ServicePrincipal('lambda.amazonaws.com'),
       managedPolicies: [
         iam.ManagedPolicy.fromAwsManagedPolicyName('service-role/AWSLambdaBasicExecutionRole'),
-        iam.ManagedPolicy.fromAwsManagedPolicyName('service-role/AWSLambdaSQSQueueExecutionRole'),
       ],
     });
-    // scoped instead of AmazonSESFullAccess — add ses:SendEmail inline once SES is wired up
-
+      emailLambdaRole.addToPolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: [
+          "ses:SendEmail"
+        ],
+        resources: ["*"],
+      })
+    );
+    
     const dataLambdaRole = new iam.Role(this, 'sqslambdaiam', {
       assumedBy: new iam.ServicePrincipal('lambda.amazonaws.com'),
       managedPolicies: [
         iam.ManagedPolicy.fromAwsManagedPolicyName('service-role/AWSLambdaBasicExecutionRole'),
-        iam.ManagedPolicy.fromAwsManagedPolicyName('service-role/AWSLambdaSQSQueueExecutionRole'),
       ],
     });
     props.analyticsTable.grantReadWriteData(dataLambdaRole);
@@ -82,18 +88,25 @@ export class MessagingStack extends cdk.Stack {
       code: lambda.Code.fromAsset('lambda'),
       role: emailLambdaRole,
     });
+    emailQueue.grantConsumeMessages(emailLambda);
+
+
     const analyticsLambda = new lambda.Function(this, 'sqs_analytics_lambda', {
       runtime: lambda.Runtime.NODEJS_24_X,
       handler: 'sqsanalytics.handler',
       code: lambda.Code.fromAsset('lambda'),
       role: dataLambdaRole,
     });
+    analyticsQueue.grantConsumeMessages(analyticsLambda);
+   
     const inventoryLambda = new lambda.Function(this, 'sqs_inventory_lambda', {
       runtime: lambda.Runtime.NODEJS_24_X,
       handler: 'sqsinventory.handler',
       code: lambda.Code.fromAsset('lambda'),
       role: dataLambdaRole,
     });
+    inventoryQueue.grantConsumeMessages(inventoryLambda);
+
 
     emailLambda.addEventSource(new lambdatriggers.SqsEventSource(emailQueue));
     inventoryLambda.addEventSource(new lambdatriggers.SqsEventSource(inventoryQueue));
