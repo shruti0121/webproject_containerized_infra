@@ -105,14 +105,6 @@ export class FrontendStack extends cdk.Stack {
       ],
     });
 
-    new ssm.StringParameter(this, 'UserPoolIdParam', {
-      parameterName: '/ricemill/cognito/user-pool-id',
-      stringValue: this.userPool.userPoolId,
-    });
-    
-    new ssm.StringParameter(this, 'UserPoolClientIdParam', {
-      parameterName: '/ricemill/cognito/client-id',
-      stringValue: this.userPoolClient.userPoolClientId,
-    });
+   
   }
 }
