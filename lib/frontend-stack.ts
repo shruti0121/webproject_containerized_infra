@@ -25,7 +25,6 @@ export class FrontendStack extends cdk.Stack {
     super(scope, id, props);
 
     // -------------------- S3 + CloudFront --------------------
-
     const bucket = new s3.Bucket(this, 'Ricemillcontainerized', {
       bucketName: 'ricemill-containerized',
       removalPolicy: cdk.RemovalPolicy.DESTROY,
