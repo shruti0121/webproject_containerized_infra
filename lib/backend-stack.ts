@@ -28,7 +28,7 @@ export class BackendStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props: BackendStackProps) {
     super(scope, id, props);
 
-    const cluster = new ecs.Cluster(this, 'Cluster', { vpc: props.vpc });
+    const cluster = new ecs.Cluster(this, 'Cluster', { vpc: props.vpc,clusterName: 'Ricemill_ECS_cluster' },);
 
     const executionRole = new iam.Role(this, 'ExecutionRoleECR', {
       assumedBy: new iam.ServicePrincipal('ecs-tasks.amazonaws.com'),
@@ -40,6 +40,15 @@ export class BackendStack extends cdk.Stack {
     });
     Object.values(props.tables).forEach(t => t.grantReadWriteData(taskRole));
     props.orderTopic.grantPublish(taskRole);
+
+
+    new cdk.CfnOutput(this, 'TaskRoleArn', {
+      value: taskRole.roleArn,
+    });
+    
+    new cdk.CfnOutput(this, 'ExecutionRoleArn', {
+      value: executionRole.roleArn,
+    });
 
     const taskDefinition = new ecs.FargateTaskDefinition(this, 'TaskDefinition', {
       memoryLimitMiB: 1024, cpu: 512, executionRole, taskRole,
