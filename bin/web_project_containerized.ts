@@ -14,7 +14,6 @@ const albCertArn = process.env.ALB_CERT_ARN;
 if (!domainName || !cloudfrontCertArn || !albCertArn) {
   throw new Error('Missing required env vars — check your .env file against .env.example');
 }
-
 const app = new cdk.App();
 
 const env = {
