@@ -28,6 +28,8 @@ export class FrontendStack extends cdk.Stack {
 
     const bucket = new s3.Bucket(this, 'Ricemillcontainerized', {
       bucketName: 'ricemill-containerized',
+      removalPolicy: cdk.RemovalPolicy.DESTROY,
+      autoDeleteObjects: true,
     });
 
 
