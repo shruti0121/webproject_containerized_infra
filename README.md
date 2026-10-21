@@ -1,5 +1,5 @@
 
-# Ricemill E-Commerce Platform — AWS Infrastructure
+# Rice Mill Ordering Platform — AWS Infrastructure
 
 Containerized e-commerce backend for a rice mill business, deployed on ECS Fargate 
 behind an ALB, with a static S3/CloudFront frontend, Cognito auth, and an 
@@ -7,7 +7,7 @@ SNS/SQS/Lambda pipeline for async order processing (email, inventory, analytics)
 
 ## Architecture
 
-![Architecture Diagram](containerized_webproject.png)
+![Architecture Diagram](RiceMill_AWS_Architecture_v3.png)
 
 Route 53 splits traffic: frontend subdomain resolves to CloudFront (serving 
 the Single page application from S3), and `api.<domain>` resolves to an ALB, which forwards to an ECS 
